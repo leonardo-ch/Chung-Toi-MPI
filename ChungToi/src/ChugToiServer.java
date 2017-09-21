@@ -22,7 +22,7 @@ public class ChugToiServer {
             System.out.println("RMI registry already running.");
         }
         try {
-            Naming.rebind("ChungToi", new ChungToiImpl(500));
+            Naming.rebind("ChungToi", new ChungToiImpl(5));
             System.out.println("ChungToiServer is ready.");
         } catch (MalformedURLException | RemoteException e) {
             System.out.println("NotasServer failed:");

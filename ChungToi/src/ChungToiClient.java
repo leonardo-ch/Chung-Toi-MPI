@@ -3,6 +3,7 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.util.Scanner;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -19,19 +20,29 @@ public class ChungToiClient {
 
         try {
             ChungToiIInterface ct = (ChungToiIInterface) Naming.lookup("//localhost:1099/ChungToi");
-            int res;
 
-            int id1 = ct.registraJogador("j1");
-            System.out.println("registraJogador: " + id1);
-
-            int id2 = ct.registraJogador("j2");
-            System.out.println("registraJogador: " + id2);
-
-            System.out.println(ct.temPartida(id1));
-            System.out.println(ct.temPartida(id2));
+            Scanner in = new Scanner(System.in);
+            System.out.println("Digite o nome do jogador para cadastro: ");
+            String nome = in.nextLine();
+            int res = ct.registraJogador(nome);
+            validaRegistro(res, nome);
 
         } catch (MalformedURLException | NotBoundException | RemoteException e) {
             System.out.println("NotasClient failed.");
+        }
+    }
+
+    private static void validaRegistro(int res, String nome) {
+        switch (res) {
+            case -2:
+                System.out.println("O numero maximo de jogadores foi atingido");
+                break;
+            case -1:
+                System.out.println("Já existe um usuário cadastrado com esse nome");
+                break;
+            default:
+                System.out.println("Novo usuario " + nome + " registrado no sistema, com ID = " + res);
+                break;
         }
     }
 }
