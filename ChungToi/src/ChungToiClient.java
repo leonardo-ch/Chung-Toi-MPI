@@ -24,7 +24,6 @@ import java.util.logging.Logger;
 public class ChungToiClient {
 
     public static void main(String[] args) {
-
         try {
             ChungToiInterface ct = (ChungToiInterface) Naming.lookup("//localhost:1099/ChungToi");
 
@@ -33,43 +32,46 @@ public class ChungToiClient {
             System.out.println("Digite o nome do jogador para cadastro: ");
             String nome = in.nextLine();
             int res = 0;
+            int id_jogo = 0;
             try {
                 res = ct.registraJogador(nome);
             } catch (RemoteException ex) {
                 Logger.getLogger(ChungToiClient.class.getName()).log(Level.SEVERE, null, ex);
             }
+            //int id_jogo = ct.getIdJogo(res);
             validaRegistro(res, nome);
             long startTime = System.currentTimeMillis(); //fetch starting time
-            while (ct.temPartida(res) == 0) {
+            while (ct.temPartida(res) <= 0) {
+                System.out.println("Aguardando partida ...");
                 Thread.sleep(1);
                 if ((System.currentTimeMillis() - startTime) < 120000) {//120 segundos
                     System.out.println("Time out");
                     System.exit(1);
                 }
             }
-            outterloop:
-            try {
-                //ct.temPartida(res);
-                while (ct.temPartida(res) == 0) {
-                    Thread.sleep(1);
-                }
-            } catch (RemoteException ex) {
-                Logger.getLogger(ChungToiClient.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(ChungToiClient.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            try {
-                while (ct.ehMinhaVez(res) == 1) {
-                    while (ct.ehMinhaVez(res) == 0) {
-                        Thread.sleep(1);
-                    }
-                }
-            } catch (RemoteException ex) {
-                Logger.getLogger(ChungToiClient.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(ChungToiClient.class.getName()).log(Level.SEVERE, null, ex);
-            }
             imprimeTabuleiro(ct.obtemTabuleiro(res));
+//            outterloop:
+//            try {
+//                //ct.temPartida(res);
+//                while (ct.temPartida(res) == 0) {
+//                    Thread.sleep(1);
+//                }
+//            } catch (RemoteException ex) {
+//                Logger.getLogger(ChungToiClient.class.getName()).log(Level.SEVERE, null, ex);
+//            } catch (InterruptedException ex) {
+//                Logger.getLogger(ChungToiClient.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+//            try {
+//                while (ct.ehMinhaVez(res) == 1) {
+//                    while (ct.ehMinhaVez(res) == 0) {
+//                        Thread.sleep(1);
+//                    }
+//                }
+//            } catch (RemoteException ex) {
+//                Logger.getLogger(ChungToiClient.class.getName()).log(Level.SEVERE, null, ex);
+//            } catch (InterruptedException ex) {
+//                Logger.getLogger(ChungToiClient.class.getName()).log(Level.SEVERE, null, ex);
+//            }
         } catch (NotBoundException ex) {
             Logger.getLogger(ChungToiClient.class.getName()).log(Level.SEVERE, null, ex);
         } catch (MalformedURLException ex) {
@@ -82,7 +84,8 @@ public class ChungToiClient {
     }
 
     private synchronized static void imprimeTabuleiro(String tabuleiro) {
-        System.out.println(tabuleiro.charAt(0) + " | "
+        System.out.println(
+                  tabuleiro.charAt(0) + " | "
                 + tabuleiro.charAt(1) + " | "
                 + tabuleiro.charAt(2)
                 + "\n- + - + -\n"
@@ -92,9 +95,7 @@ public class ChungToiClient {
                 + "\n- + - + -\n"
                 + tabuleiro.charAt(6) + " | "
                 + tabuleiro.charAt(7) + " | "
-                + tabuleiro.charAt(8)
-                + "\n- + - + -");
-
+                + tabuleiro.charAt(8));
     }
 
     private synchronized static void validaRegistro(int res, String nome) {
@@ -110,4 +111,5 @@ public class ChungToiClient {
                 break;
         }
     }
+    
 }

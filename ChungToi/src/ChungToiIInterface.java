@@ -128,4 +128,13 @@ public interface ChungToiIInterface extends Remote {
      * @throws RemoteException
      */
     String obtemOponente(int id) throws RemoteException;
+    
+    /**
+     * Este método obtem o id do jogo do jogador
+     *
+     * @param id do usuário (obtido através da chamada registraJogador)
+     * @return string vazio para erro ou string com o nome do oponente
+     * @throws RemoteException
+     */
+    int getIdJogo(int id) throws RemoteException;
 }

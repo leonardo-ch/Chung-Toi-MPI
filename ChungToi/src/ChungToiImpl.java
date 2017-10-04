@@ -66,12 +66,18 @@ public class ChungToiImpl extends UnicastRemoteObject implements ChungToiInterfa
         try {
             int res = 0;
             for (int i = 0; i < maxNumProcessos; i++) {
-                if (partidas[countPartidas].isLivre2()) {
-                    partidas[countPartidas].setJogador1(new Usuario(usuarios.get(id).getNome(), id));
+                if (partidas[countPartidas].isLivre1()) {
+                    partidas[countPartidas].setNjogador1(usuarios.get(id).getNome());
+                    partidas[countPartidas].setId1(id);
+                    System.out.println("Usuário " + usuarios.get(id).getNome() + "(" + id + ")" + " cadastrado na partida " + countPartidas + " como jogador 1");
                     res = 1;
+                    break;
                 } else if (partidas[countPartidas].isLivre2()) {
-                    partidas[countPartidas].setJogador2(new Usuario(usuarios.get(id).getNome(), id));
+                    partidas[countPartidas].setNjogador2(usuarios.get(id).getNome());
+                    partidas[countPartidas].setId2(id);
+                    System.out.println("Usuário  " + usuarios.get(id).getNome() + "(" + id + ")" + " cadastrado na partida " + countPartidas + " como jogador 2");
                     res = 2;
+                    break;
                 }
             }
             return res;
@@ -82,35 +88,32 @@ public class ChungToiImpl extends UnicastRemoteObject implements ChungToiInterfa
 
     @Override
     public synchronized int ehMinhaVez(int id) throws RemoteException {
-        try{
+        try {
             return 0;
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             return -1;
         }
     }
 
     @Override
     public synchronized String obtemTabuleiro(int id) throws RemoteException {
-        return partidas[1].getTabuleiro();
+        return partidas[1].getTabuleiroString();
     }
 
     @Override
     public synchronized int posicionaPeca(int id, int x, int y, int orientacao) throws RemoteException {
-        try{
-            return 1;
-        }
-        catch(Exception e){
+        try {
+            return partidas[0].addPeca(id, x, y, orientacao);
+        } catch (Exception e) {
             return -1;
         }
     }
 
     @Override
     public synchronized int movePeca(int id, int x, int y, int sentido, int numero_casas, int orientacao) throws RemoteException {
-        try{
+        try {
             return 1;
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             return -1;
         }
     }
@@ -118,6 +121,27 @@ public class ChungToiImpl extends UnicastRemoteObject implements ChungToiInterfa
     @Override
     public synchronized String obtemOponente(int id) throws RemoteException {
         String res = "";
+        return res;
+    }
+
+    @Override
+    public synchronized int getIDJogo(int id) {
+        int res = 0;
+        for (int i = 0; i < maxNumProcessos; i++) {
+            if (partidas[countPartidas].isLivre1()) {
+                partidas[countPartidas].setNjogador1(usuarios.get(id).getNome());
+                partidas[countPartidas].setId1(id);
+                System.out.println("Usuário " + usuarios.get(id).getNome() + "(" + id + ")" + " cadastrado na partida " + countPartidas + " como jogador 1");
+                res = countPartidas;
+                break;
+            } else if (partidas[countPartidas].isLivre2()) {
+                partidas[countPartidas].setNjogador2(usuarios.get(id).getNome());
+                partidas[countPartidas].setId2(id);
+                System.out.println("Usuário  " + usuarios.get(id).getNome() + "(" + id + ")" + " cadastrado na partida " + countPartidas + " como jogador 2");
+                res = countPartidas;
+                break;
+            }
+        }
         return res;
     }
 
