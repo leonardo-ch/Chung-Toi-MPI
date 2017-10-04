@@ -1,0 +1,11 @@
+registrajogador
+while(!nao tem partida){sleep(1);}
+while(!terminou){
+	while(!naoéminhavez){
+		sleep(1);
+	}
+	\\verificar se não terminou
+		\\ler jogada do usuario
+		LerJogada();
+		posicionaPeca();	
+}
