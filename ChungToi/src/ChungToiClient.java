@@ -52,9 +52,10 @@ public class ChungToiClient {
             System.out.println("Iniciou a fase de colocação de peças");
             int posicao = -1, orientacao = -1, sentido = -1, numeroCasas = -1;
             posiciona:
-            while (!(ct.ehMinhaVez(id) >= 2)) {
+            while (!(ct.ehMinhaVez(id) >= 2) && !deslocamento) {
                 if (ct.isDeslocamento(id)) {
                     deslocamento = true;
+                    System.out.println("Iniciou a fase de deslocamento de peças");
                     break posiciona;
                 }
                 startTime = System.currentTimeMillis(); //fetch starting time
@@ -64,13 +65,16 @@ public class ChungToiClient {
                         System.out.println("Aguardando jogada do oponente ...");
                         waitTime = System.currentTimeMillis();
                     }
-                    if ((System.currentTimeMillis() - startTime) > 60000) {//120 segundos
+                    if ((System.currentTimeMillis() - startTime) > 60000) {//60 segundos
                         System.out.println("Time out\nVocê ganhou por WO");
                         ct.encerraPartida(id);
                         System.exit(1);
                     }
                 }
                 imprimeTabuleiro(ct.obtemTabuleiro(id));
+                if (ct.ehMinhaVez(id) >= 2) {
+                    break posiciona;
+                }
                 try {
                     System.out.println("Indique a posição do tabuleiro onde a peça deve ser posicionada (de 0 até 8, inclusive) ");
                     posicao = in.nextInt();
@@ -81,8 +85,10 @@ public class ChungToiClient {
                     System.out.println("Entrada inválida");
                     in = new Scanner(System.in);
                 }
+                deslocamento = true;
             }
-            System.out.println("Iniciou a fase de deslocamento de peças");
+            
+            deslocamento:
             while ((!(ct.ehMinhaVez(id) >= 2)) && deslocamento) {
                 startTime = System.currentTimeMillis(); //fetch starting time
                 waitTime = System.currentTimeMillis();
@@ -91,13 +97,16 @@ public class ChungToiClient {
                         System.out.println("Aguardando jogada do oponente ...");
                         waitTime = System.currentTimeMillis();
                     }
-                    if ((System.currentTimeMillis() - startTime) > 60000) {//120 segundos
+                    if ((System.currentTimeMillis() - startTime) > 60000) {//60 segundos
                         System.out.println("Time out\nVocê ganhou por WO");
                         ct.encerraPartida(id);
                         System.exit(1);
                     }
                 }
                 imprimeTabuleiro(ct.obtemTabuleiro(id));
+                if (ct.ehMinhaVez(id) >= 2) {
+                    break deslocamento;
+                }
                 try {
                     System.out.println("Indique a posição do tabuleiro onde se encontra a peça que se deseja mover (de 0 até 8, inclusive)");
                     posicao = in.nextInt();
@@ -111,7 +120,7 @@ public class ChungToiClient {
                 } catch (InputMismatchException e) {
                     System.out.println("Entrada inválida");
                 }
-                
+
             }
             switch (ct.ehMinhaVez(id)) {
                 case 2:
@@ -184,7 +193,7 @@ public class ChungToiClient {
                 System.out.println("Peça posicionada em " + posicao + ", com sentido " + sentido + ", com numero de casas igual a " + numeroCasas + " e orientacao " + orientacaoString);
                 break;
             case 0:
-                System.out.println("Posição inválida, devido a uma casa já ocupada");
+                System.out.println("Posição inválida, devido a uma casa não ocupada ou fora do tabuleiro");
                 break;
             case -1:
                 System.out.println("Parametros invalidos");

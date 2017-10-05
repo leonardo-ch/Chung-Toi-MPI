@@ -23,19 +23,7 @@ public class ChungToi {
     private int[] statusJogo;
 
     public ChungToi() {
-        tabuleiro = new char[3][3];
-        this.statusJogo = new int[3];
-        this.jogo = 0;
-        for (int i = 0; i < 3; i++) {
-            this.statusJogo[i] = 0;
-        }
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                tabuleiro[i][j] = '.';
-            }
-        }
-        livre1 = true;
-        livre2 = true;
+        inicializaVariveis();
     }
 
     public int getId1() {
@@ -135,6 +123,7 @@ public class ChungToi {
         if (this.vezJogador != id) {
             return -3;
         }
+        //Caso não esteja vazia
         if (tabuleiro[x][y] != '.') {
             return 0;
         }
@@ -279,7 +268,14 @@ public class ChungToi {
         if (this.vezJogador != id) {
             return -3;
         }
-        if (tabuleiro[x][y] != '.') {
+        //Caso esteja vazia
+        if (tabuleiro[x][y] == '.') {
+            return 0;
+        }
+        //Caso a peça a ser movida não for do jogador
+        if (id == this.id1 && (tabuleiro[x][y] == 'E' || tabuleiro[x][y] == 'e')) {
+            return 0;
+        } else if (id == this.id2 && (tabuleiro[x][y] == 'C' || tabuleiro[x][y] == 'c')) {
             return 0;
         }
         int auxX = x, auxY = y;
@@ -295,7 +291,7 @@ public class ChungToi {
                     break;
                 case 1:
                     //para cima
-                    x++;
+                    x--;
                     if (x < 0 || x > 2 || y > 0 || y < 2) {
                         return 0;
                     }
@@ -335,7 +331,7 @@ public class ChungToi {
                     break;
                 case 7:
                     //para baixo
-                    x--;
+                    x++;
                     if (x < 0 || x > 2 || y > 0 || y < 2) {
                         return 0;
                     }
@@ -352,10 +348,10 @@ public class ChungToi {
                     return -1;
             }
         }
-        
+
         //Limpa a posição a ser deslocada
         tabuleiro[auxX][auxY] = '.';
-        
+
         // Atribui jogada na célula
         if (id == id1) {
             if (orientacao == 0) {
@@ -376,6 +372,22 @@ public class ChungToi {
         }
         this.vezJogador = this.getVezJogador() == this.id1 ? this.id2 : this.id1;
         return res;
+    }
+
+    public void inicializaVariveis() {
+        tabuleiro = new char[3][3];
+        this.statusJogo = new int[3];
+        this.jogo = 0;
+        for (int i = 0; i < 3; i++) {
+            this.statusJogo[i] = 0;
+        }
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                tabuleiro[i][j] = '.';
+            }
+        }
+        livre1 = true;
+        livre2 = true;
     }
 
 }
