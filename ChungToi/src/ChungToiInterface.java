@@ -78,10 +78,7 @@ public interface ChungToiInterface extends Remote {
      * Este método posiciona a peça do jogador no tabuleiro
      *
      * @param id do usuário (obtido através da chamada registraJogador)
-     * @param x posição do tabuleiro onde a
-     * peça deve ser posicionada (de 0 até 8, inclusive)
-     * @param y posição do tabuleiro onde a
-     * peça deve ser posicionada (de 0 até 8, inclusive)
+     * @param posicao - posição do tabuleiro onde a peça deve ser posicionada (de 0 até 8, inclusive)
      * @param orientacao orientação da peça (0 correspondendo à
      * orientação perpendicular, e 1 correspondendo à orientação diagonal)
      * @return
@@ -92,15 +89,13 @@ public interface ChungToiInterface extends Remote {
      * iniciada: ainda não há dois jogadores registrados na partida), ­3 (não é a vez do jogador).
      * @throws RemoteException
      */
-    int posicionaPeca(int id, int x, int y, int orientacao) throws RemoteException;
+    int posicionaPeca(int id, int posicao, int orientacao) throws RemoteException;
 
     /**
      * Este método move a peça do jogador no tabuleiro
      *
      * @param id do usuário (obtido através da chamada registraJogador) 
-     * @param x posição do tabuleiro onde se
-     * encontra a peça que se deseja mover (de 0 até 8, inclusive)
-     * @param y posição do tabuleiro onde se
+     * @param posicao - posição do tabuleiro onde se
      * encontra a peça que se deseja mover (de 0 até 8, inclusive)
      * @param sentido sentido do deslocamento (0 a 8, inclusive). Para o
      * sentido do deslocamento deve­se usar a seguinte convenção: 0 = diagonal esquerda­superior; 1 =
@@ -118,7 +113,7 @@ public interface ChungToiInterface extends Remote {
      * jogadores registrados na partida), ­3 (não é a vez do jogador).
      * @throws RemoteException
      */
-    int movePeca(int id, int x, int y, int sentido, int numero_casas, int orientacao) throws RemoteException;
+    int movePeca(int id, int posicao, int sentido, int numero_casas, int orientacao) throws RemoteException;
 
     /**
      * Este método obtem o nome do oponente
@@ -130,12 +125,12 @@ public interface ChungToiInterface extends Remote {
     String obtemOponente(int id) throws RemoteException;
 
     /**
-     * Este método obtem o nome do oponente
+     * Este método indica se ocorrera a fase de deslcamento ou não
      *
      * @param id do usuário (obtido através da chamada registraJogador)
-     * @return string vazio para erro ou string com o nome do oponente
+     * @return true - ocorrera a fase ou false - não ocorrera a fase
      * @throws RemoteException
      */
-    int getIDJogo(int id);
+    boolean isDeslocamento(int id)  throws RemoteException;
 }
 

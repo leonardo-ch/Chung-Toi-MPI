@@ -230,7 +230,7 @@ public class ChungToi {
     public boolean isFimJogo() {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                if (this.tabuleiro[i][j] == ' ') {
+                if (this.tabuleiro[i][j] == '.') {
                     return false;
                 }
             }
@@ -249,6 +249,21 @@ public class ChungToi {
         } else {
             this.statusJogo[this.jogo] = 0;
         }
+    }
+
+    public boolean isDeslocamento() {
+        int aux = 0;
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (tabuleiro[i][j] == '.') {
+                    aux++;
+                }
+            }
+        }
+        if (aux <= 3) {
+            return true;
+        }
+        return false;
     }
 
 }

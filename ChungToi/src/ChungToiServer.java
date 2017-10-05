@@ -24,8 +24,8 @@ public class ChungToiServer {
         try {
             Naming.rebind("ChungToi", new ChungToiImpl(500));
             System.out.println("ChungToiServer is ready.");
-        } catch (MalformedURLException | RemoteException e) {
-            System.out.println("NotasServer failed:");
-        }
+        } catch (MalformedURLException | RemoteException ex) {
+            System.out.println("ChungToiServer failed:");
+        } 
     }
 }
