@@ -3,9 +3,8 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.util.InputMismatchException;
 import java.util.Scanner;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -49,11 +48,15 @@ public class ChungToiClient {
                 }
             }
             boolean deslocamento = false;
-            System.out.println("Jogo começou, você jogará com " +ct.obtemOponente(id));
+            System.out.println("Jogo começou, você jogará com " + ct.obtemOponente(id));
             System.out.println("Iniciou a fase de colocação de peças");
             int posicao = -1, orientacao = -1, sentido = -1, numeroCasas = -1;
             posiciona:
             while (!(ct.ehMinhaVez(id) >= 2)) {
+                if (ct.isDeslocamento(id)) {
+                    deslocamento = true;
+                    break posiciona;
+                }
                 startTime = System.currentTimeMillis(); //fetch starting time
                 waitTime = System.currentTimeMillis();
                 while (ct.ehMinhaVez(id) == 0) {
@@ -68,14 +71,15 @@ public class ChungToiClient {
                     }
                 }
                 imprimeTabuleiro(ct.obtemTabuleiro(id));
-                System.out.println("Indique a posição do tabuleiro onde a peça deve ser posicionada (de 0 até 8, inclusive) ");
-                posicao = in.nextInt();
-                System.out.println("Indique a orientação da peça (0 correspondendo à orientação perpendicular, e 1 correspondendo à orientação diagonal). ");
-                orientacao = in.nextInt();
-                validaPosicionaPeca(ct.posicionaPeca(id, posicao, orientacao), id, posicao, orientacao);
-                if (ct.isDeslocamento(id)) {
-                    deslocamento = true;
-                    break posiciona;
+                try {
+                    System.out.println("Indique a posição do tabuleiro onde a peça deve ser posicionada (de 0 até 8, inclusive) ");
+                    posicao = in.nextInt();
+                    System.out.println("Indique a orientação da peça (0 correspondendo à orientação perpendicular, e 1 correspondendo à orientação diagonal). ");
+                    orientacao = in.nextInt();
+                    validaPosicionaPeca(ct.posicionaPeca(id, posicao, orientacao), id, posicao, orientacao);
+                } catch (InputMismatchException e) {
+                    System.out.println("Entrada inválida");
+                    in = new Scanner(System.in);
                 }
             }
             System.out.println("Iniciou a fase de deslocamento de peças");
@@ -94,15 +98,20 @@ public class ChungToiClient {
                     }
                 }
                 imprimeTabuleiro(ct.obtemTabuleiro(id));
-                System.out.println("Indique a posição do tabuleiro onde se encontra a peça que se deseja mover (de 0 até 8, inclusive)");
-                posicao = in.nextInt();
-                System.out.println("Indique a orientação da peça (0 correspondendo à orientação perpendicular, e 1 correspondendo à orientação diagonal)");
-                orientacao = in.nextInt();
-                System.out.println("Indique o sentido do deslocamento (0 a 8, inclusive)");
-                sentido = in.nextInt();
-                System.out.println("Indique o número de casas deslocadas (0, 1 ou 2)");
-                numeroCasas = in.nextInt();
-                validaMovePeca(ct.movePeca(id, posicao, sentido, numeroCasas, orientacao), id, posicao, sentido, numeroCasas, orientacao);
+                try {
+                    System.out.println("Indique a posição do tabuleiro onde se encontra a peça que se deseja mover (de 0 até 8, inclusive)");
+                    posicao = in.nextInt();
+                    System.out.println("Indique a orientação da peça (0 correspondendo à orientação perpendicular, e 1 correspondendo à orientação diagonal)");
+                    orientacao = in.nextInt();
+                    System.out.println("Indique o sentido do deslocamento (0 a 8, inclusive)");
+                    sentido = in.nextInt();
+                    System.out.println("Indique o número de casas deslocadas (0, 1 ou 2)");
+                    numeroCasas = in.nextInt();
+                    validaMovePeca(ct.movePeca(id, posicao, sentido, numeroCasas, orientacao), id, posicao, sentido, numeroCasas, orientacao);
+                } catch (InputMismatchException e) {
+                    System.out.println("Entrada inválida");
+                }
+                
             }
             switch (ct.ehMinhaVez(id)) {
                 case 2:
@@ -172,7 +181,7 @@ public class ChungToiClient {
                 break;
             case 1:
                 String orientacaoString = orientacao == 1 ? "diagonal " : "perpendicular ";
-                System.out.println("Peça posicionada em " + posicao + ", com sentido " + sentido +", com numero de casas igual a " + numeroCasas + " e orientacao " + orientacaoString);
+                System.out.println("Peça posicionada em " + posicao + ", com sentido " + sentido + ", com numero de casas igual a " + numeroCasas + " e orientacao " + orientacaoString);
                 break;
             case 0:
                 System.out.println("Posição inválida, devido a uma casa já ocupada");

@@ -80,6 +80,7 @@ public class ChungToiImpl extends UnicastRemoteObject implements ChungToiInterfa
     public synchronized int encerraPartida(int id) throws RemoteException {
         try {
             partidas[getIDJogo(id)].completo = true;
+            //mais de dois jogadores, encerram partida limpa o nome
             return 0;
         } catch (Exception e) {
             return -1;
@@ -134,10 +135,10 @@ public class ChungToiImpl extends UnicastRemoteObject implements ChungToiInterfa
     @Override
     public synchronized int posicionaPeca(int id, int posicao, int orientacao) throws RemoteException {
         try {
-            if (posicao > 8 || posicao < 0) {
+            if (posicao > 8 || posicao < 0 || orientacao > 1 || orientacao < 0) {
                 return -1;
             }
-            if(partidas[getIDJogo(id)].completo){
+            if (partidas[getIDJogo(id)].completo) {
                 return 2;
             }
             return partidas[getIDJogo(id)].jogo.addPeca(id, getPosicao(posicao).getX(), getPosicao(posicao).getY(), orientacao);
@@ -149,10 +150,10 @@ public class ChungToiImpl extends UnicastRemoteObject implements ChungToiInterfa
     @Override
     public synchronized int movePeca(int id, int posicao, int sentido, int numero_casas, int orientacao) throws RemoteException {
         try {
-            if (posicao > 8 || posicao < 0) {
+            if (posicao > 8 || posicao < 0 || sentido > 8 || sentido < 0 || numero_casas > 2 || numero_casas < 0 || orientacao > 1 || orientacao < 0) {
                 return -1;
             }
-            if(partidas[getIDJogo(id)].completo){
+            if (partidas[getIDJogo(id)].completo) {
                 return 2;
             }
             return partidas[getIDJogo(id)].jogo.movePeca(id, getPosicao(posicao).getX(), getPosicao(posicao).getY(), sentido, numero_casas, orientacao);

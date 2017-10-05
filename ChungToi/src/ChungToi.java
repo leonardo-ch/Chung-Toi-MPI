@@ -274,12 +274,6 @@ public class ChungToi {
     }
 
     public int movePeca(int id, int x, int y, int sentido, int numero_casas, int orientacao) {
-        //ARUUUUUUUUUUMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR
-        //ARUUUUUUUUUUMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR
-        //ARUUUUUUUUUUMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR
-        //ARUUUUUUUUUUMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR
-        //ARUUUUUUUUUUMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR
-        //ARUUUUUUUUUUMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR
         int res = -1;
         //Não é a vez do jogador
         if (this.vezJogador != id) {
@@ -288,6 +282,80 @@ public class ChungToi {
         if (tabuleiro[x][y] != '.') {
             return 0;
         }
+        int auxX = x, auxY = y;
+        for (int i = 0; i < numero_casas; i++) {
+            switch (sentido) {
+                case 0:
+                    //diagonal esquerda superior
+                    x--;
+                    y--;
+                    if (x < 0 || x > 2 || y > 0 || y < 2) {
+                        return 0;
+                    }
+                    break;
+                case 1:
+                    //para cima
+                    x++;
+                    if (x < 0 || x > 2 || y > 0 || y < 2) {
+                        return 0;
+                    }
+                    break;
+                case 2:
+                    //diagonal direita superior
+                    x--;
+                    y++;
+                    if (x < 0 || x > 2 || y > 0 || y < 2) {
+                        return 0;
+                    }
+                    break;
+                case 3:
+                    //esquerda
+                    y--;
+                    if (x < 0 || x > 2 || y > 0 || y < 2) {
+                        return 0;
+                    }
+                    break;
+                case 4:
+                    //sem movimento;
+                    break;
+                case 5:
+                    //direta
+                    y++;
+                    if (x < 0 || x > 2 || y > 0 || y < 2) {
+                        return 0;
+                    }
+                    break;
+                case 6:
+                    //diagonal esquerda inferior
+                    x++;
+                    y--;
+                    if (x < 0 || x > 2 || y > 0 || y < 2) {
+                        return 0;
+                    }
+                    break;
+                case 7:
+                    //para baixo
+                    x--;
+                    if (x < 0 || x > 2 || y > 0 || y < 2) {
+                        return 0;
+                    }
+                    break;
+                case 8:
+                    //diagonal direita inferior
+                    x++;
+                    y++;
+                    if (x < 0 || x > 2 || y > 0 || y < 2) {
+                        return 0;
+                    }
+                    break;
+                default:
+                    return -1;
+            }
+        }
+        
+        //Limpa a posição a ser deslocada
+        tabuleiro[auxX][auxY] = '.';
+        
         // Atribui jogada na célula
         if (id == id1) {
             if (orientacao == 0) {
