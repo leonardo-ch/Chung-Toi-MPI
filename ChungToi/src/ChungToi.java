@@ -168,12 +168,14 @@ public class ChungToi {
         int linha = 0;
 
         //define o marcador
-        char marcador = idJogador == this.id1 ? 'X' : 'O';
+        char marcadorPerpendicular = idJogador == this.id1 ? 'C' : 'E';
+        char marcadorDiagonal = idJogador == this.id1 ? 'c' : 'e';
 
         //percorre as  horizontais
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                if (this.tabuleiro[i][j] == marcador) {
+                if (this.tabuleiro[i][j] == marcadorPerpendicular
+                        || this.tabuleiro[i][j] == marcadorDiagonal) {
                     linha++;
                 }
             }
@@ -188,7 +190,8 @@ public class ChungToi {
         //percorre as verticais
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                if (this.tabuleiro[j][i] == marcador) {
+                if (this.tabuleiro[j][i] == marcadorPerpendicular
+                        || this.tabuleiro[i][j] == marcadorDiagonal) {
                     linha++;
                 }
             }
@@ -202,7 +205,8 @@ public class ChungToi {
 
         //percorre a diagonal esquerda
         for (int i = 0; i < 3; i++) {
-            if (this.tabuleiro[i][i] == marcador) {
+            if (this.tabuleiro[i][i] == marcadorPerpendicular
+                    || this.tabuleiro[i][i] == marcadorDiagonal) {
                 linha++;
             }
         }
@@ -214,10 +218,13 @@ public class ChungToi {
         }
 
         //percorre a diagonal direita
-        for (int i = 0; i < 3; i++) {
-            if (this.tabuleiro[3 - i][i] == marcador) {
+        int aux = 0;
+        for (int i = 2; i >= 0; i--) {
+            if (this.tabuleiro[aux][i] == marcadorPerpendicular
+                    || this.tabuleiro[aux][i] == marcadorDiagonal) {
                 linha++;
             }
+            aux++;
         }
 
         if (linha == 3) {
@@ -264,6 +271,43 @@ public class ChungToi {
             return true;
         }
         return false;
+    }
+
+    public int movePeca(int id, int x, int y, int sentido, int numero_casas, int orientacao) {
+        //ARUUUUUUUUUUMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR
+        //ARUUUUUUUUUUMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR
+        //ARUUUUUUUUUUMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR
+        //ARUUUUUUUUUUMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR
+        //ARUUUUUUUUUUMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR
+        //ARUUUUUUUUUUMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR
+        int res = -1;
+        //Não é a vez do jogador
+        if (this.vezJogador != id) {
+            return -3;
+        }
+        if (tabuleiro[x][y] != '.') {
+            return 0;
+        }
+        // Atribui jogada na célula
+        if (id == id1) {
+            if (orientacao == 0) {
+                tabuleiro[x][y] = 'C';
+                res = 1;
+            } else if (orientacao == 1) {
+                tabuleiro[x][y] = 'c';
+                res = 1;
+            }
+        } else if (id == id2) {
+            if (orientacao == 0) {
+                tabuleiro[x][y] = 'E';
+                res = 1;
+            } else if (orientacao == 1) {
+                tabuleiro[x][y] = 'e';
+                res = 1;
+            }
+        }
+        this.vezJogador = this.getVezJogador() == this.id1 ? this.id2 : this.id1;
+        return res;
     }
 
 }

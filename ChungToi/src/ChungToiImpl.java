@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -77,9 +79,7 @@ public class ChungToiImpl extends UnicastRemoteObject implements ChungToiInterfa
     @Override
     public synchronized int encerraPartida(int id) throws RemoteException {
         try {
-            List<Dados> list = new ArrayList<>(Arrays.asList(partidas));
-            list.remove(getIDJogo(id));
-            partidas = list.toArray(partidas);
+            partidas[getIDJogo(id)].completo = true;
             return 0;
         } catch (Exception e) {
             return -1;
@@ -91,8 +91,7 @@ public class ChungToiImpl extends UnicastRemoteObject implements ChungToiInterfa
         try {
             if (partidas[getIDJogo(id)].jogo.getId1() == id && !partidas[getIDJogo(id)].jogo.isLivre1() && !partidas[getIDJogo(id)].jogo.isLivre2()) {
                 return 1;
-            }
-            else if (partidas[getIDJogo(id)].jogo.getId2() == id && !partidas[getIDJogo(id)].jogo.isLivre2() && !partidas[getIDJogo(id)].jogo.isLivre1()) {
+            } else if (partidas[getIDJogo(id)].jogo.getId2() == id && !partidas[getIDJogo(id)].jogo.isLivre2() && !partidas[getIDJogo(id)].jogo.isLivre1()) {
                 return 2;
             }
             return 0;
@@ -107,24 +106,22 @@ public class ChungToiImpl extends UnicastRemoteObject implements ChungToiInterfa
             if (partidas[getIDJogo(id)].jogo.getId1() == id) {
                 if (partidas[getIDJogo(id)].jogo.isVencedor(id)) {
                     return 2;
-                }
-                if (partidas[getIDJogo(id)].jogo.isVencedor(partidas[getIDJogo(id)].jogo.getId2())) {
+                } else if (partidas[getIDJogo(id)].jogo.isVencedor(partidas[getIDJogo(id)].jogo.getId2())) {
                     return 3;
                 }
             } else if (partidas[getIDJogo(id)].jogo.getId2() == id) {
                 if (partidas[getIDJogo(id)].jogo.isVencedor(id)) {
                     return 2;
-                }
-                if (partidas[getIDJogo(id)].jogo.isVencedor(partidas[getIDJogo(id)].jogo.getId1())) {
+                } else if (partidas[getIDJogo(id)].jogo.isVencedor(partidas[getIDJogo(id)].jogo.getId1())) {
                     return 3;
                 }
-            } else if (partidas[getIDJogo(id)].jogo.isFimJogo()) {
-                return 4;
-            } else {
-                return partidas[getIDJogo(id)].jogo.getVezJogador() == id ? 1 : 0;
             }
+            if (partidas[getIDJogo(id)].jogo.isFimJogo()) {
+                return 4;
+            }
+            return partidas[getIDJogo(id)].jogo.getVezJogador() == id ? 1 : 0;
         } catch (Exception e) {
-            return -1;
+            Logger.getLogger(ChungToiClient.class.getName()).log(Level.SEVERE, null, e);
         }
         return -1;
     }
@@ -137,8 +134,12 @@ public class ChungToiImpl extends UnicastRemoteObject implements ChungToiInterfa
     @Override
     public synchronized int posicionaPeca(int id, int posicao, int orientacao) throws RemoteException {
         try {
-            if(posicao > 8 || posicao < 0)
+            if (posicao > 8 || posicao < 0) {
                 return -1;
+            }
+            if(partidas[getIDJogo(id)].completo){
+                return 2;
+            }
             return partidas[getIDJogo(id)].jogo.addPeca(id, getPosicao(posicao).getX(), getPosicao(posicao).getY(), orientacao);
         } catch (Exception e) {
             return -1;
@@ -148,7 +149,13 @@ public class ChungToiImpl extends UnicastRemoteObject implements ChungToiInterfa
     @Override
     public synchronized int movePeca(int id, int posicao, int sentido, int numero_casas, int orientacao) throws RemoteException {
         try {
-            return 1;
+            if (posicao > 8 || posicao < 0) {
+                return -1;
+            }
+            if(partidas[getIDJogo(id)].completo){
+                return 2;
+            }
+            return partidas[getIDJogo(id)].jogo.movePeca(id, getPosicao(posicao).getX(), getPosicao(posicao).getY(), sentido, numero_casas, orientacao);
         } catch (Exception e) {
             return -1;
         }
@@ -160,7 +167,7 @@ public class ChungToiImpl extends UnicastRemoteObject implements ChungToiInterfa
         if (partidas[getIDJogo(id)].jogo.getId1() == id) {
             res = partidas[getIDJogo(id)].jogo.getNjogador2();
         } else if (partidas[getIDJogo(id)].jogo.getId2() == id) {
-            res = partidas[getIDJogo(id)].jogo.getNjogador2();
+            res = partidas[getIDJogo(id)].jogo.getNjogador1();
         }
         return res;
     }

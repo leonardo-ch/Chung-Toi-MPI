@@ -49,7 +49,7 @@ public class ChungToiClient {
                 }
             }
             boolean deslocamento = false;
-            System.out.println("Jogo começou");
+            System.out.println("Jogo começou, você jogará com " +ct.obtemOponente(id));
             System.out.println("Iniciou a fase de colocação de peças");
             int posicao = -1, orientacao = -1, sentido = -1, numeroCasas = -1;
             posiciona:
@@ -80,11 +80,21 @@ public class ChungToiClient {
             }
             System.out.println("Iniciou a fase de deslocamento de peças");
             while ((!(ct.ehMinhaVez(id) >= 2)) && deslocamento) {
+                startTime = System.currentTimeMillis(); //fetch starting time
+                waitTime = System.currentTimeMillis();
                 while (ct.ehMinhaVez(id) == 0) {
-                    System.out.println("Aguardando jogada do oponente ...");
-                    Thread.sleep(1);
+                    if ((System.currentTimeMillis() - waitTime) >= 1000) {//1 segundo
+                        System.out.println("Aguardando jogada do oponente ...");
+                        waitTime = System.currentTimeMillis();
+                    }
+                    if ((System.currentTimeMillis() - startTime) > 60000) {//120 segundos
+                        System.out.println("Time out\nVocê ganhou por WO");
+                        ct.encerraPartida(id);
+                        System.exit(1);
+                    }
                 }
-                System.out.println("Indique a posição do tabuleiro onde a peça deve ser deslocada (de 0 até 8, inclusive)");
+                imprimeTabuleiro(ct.obtemTabuleiro(id));
+                System.out.println("Indique a posição do tabuleiro onde se encontra a peça que se deseja mover (de 0 até 8, inclusive)");
                 posicao = in.nextInt();
                 System.out.println("Indique a orientação da peça (0 correspondendo à orientação perpendicular, e 1 correspondendo à orientação diagonal)");
                 orientacao = in.nextInt();
@@ -118,7 +128,7 @@ public class ChungToiClient {
                 default:
                     break;
             }
-        } catch (NotBoundException | MalformedURLException | RemoteException | InterruptedException ex) {
+        } catch (RemoteException | NotBoundException | MalformedURLException ex) {
             Logger.getLogger(ChungToiClient.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -161,11 +171,17 @@ public class ChungToiClient {
                 System.exit(0);
                 break;
             case 1:
-                System.out.println("Peca");
-                System.exit(0);
+                String orientacaoString = orientacao == 1 ? "diagonal " : "perpendicular ";
+                System.out.println("Peça posicionada em " + posicao + ", com sentido " + sentido +", com numero de casas igual a " + numeroCasas + " e orientacao " + orientacaoString);
+                break;
+            case 0:
+                System.out.println("Posição inválida, devido a uma casa já ocupada");
+                break;
+            case -1:
+                System.out.println("Parametros invalidos");
                 break;
             default:
-                System.out.println("");
+                System.exit(0);
                 break;
         }
     }
@@ -177,7 +193,8 @@ public class ChungToiClient {
                 System.exit(0);
                 break;
             case 1:
-                System.out.println("Peça posicionada em " + posicao + " e com orientação de " + orientacao);
+                String orientacaoString = orientacao == 1 ? "diagonal " : "perpendicular ";
+                System.out.println("Peça posicionada em " + posicao + " e com orientação de " + orientacaoString);
                 break;
             case 0:
                 System.out.println("Posição inválida, devido a uma casa já ocupada");
