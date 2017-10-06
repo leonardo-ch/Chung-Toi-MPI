@@ -107,7 +107,7 @@ public class ChungToi {
         return tabuleiro;
     }
 
-    public String getTabuleiroString() {
+    public synchronized String getTabuleiroString() {
         String res = "";
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
@@ -117,7 +117,7 @@ public class ChungToi {
         return res;
     }
 
-    public int addPeca(int id, int x, int y, int orientacao) {
+    public synchronized int addPeca(int id, int x, int y, int orientacao) {
         int res = -1;
         //Não é a vez do jogador
         if (this.vezJogador != id) {
@@ -153,7 +153,7 @@ public class ChungToi {
         return this.tabuleiro[linha - 1][coluna - 1];
     }
 
-    public boolean isVencedor(int idJogador) {
+    public synchronized boolean isVencedor(int idJogador) {
         int linha = 0;
 
         //define o marcador
@@ -180,7 +180,7 @@ public class ChungToi {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 if (this.tabuleiro[j][i] == marcadorPerpendicular
-                        || this.tabuleiro[i][j] == marcadorDiagonal) {
+                        || this.tabuleiro[j][i] == marcadorDiagonal) {
                     linha++;
                 }
             }
@@ -223,7 +223,7 @@ public class ChungToi {
         return false;
     }
 
-    public boolean isFimJogo() {
+    public synchronized boolean isFimJogo() {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 if (this.tabuleiro[i][j] == '.') {
@@ -247,7 +247,7 @@ public class ChungToi {
         }
     }
 
-    public boolean isDeslocamento() {
+    public synchronized boolean isDeslocamento() {
         int aux = 0;
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
@@ -262,7 +262,7 @@ public class ChungToi {
         return false;
     }
 
-    public int movePeca(int id, int x, int y, int sentido, int numero_casas, int orientacao) {
+    public synchronized int movePeca(int id, int x, int y, int sentido, int numero_casas, int orientacao) {
         int res = -1;
         //Não é a vez do jogador
         if (this.vezJogador != id) {
@@ -285,14 +285,14 @@ public class ChungToi {
                     //diagonal esquerda superior
                     x--;
                     y--;
-                    if (x < 0 || x > 2 || y > 0 || y < 2) {
+                    if (x < 0 || x > 2 || y < 0 || y > 2) {
                         return 0;
                     }
                     break;
                 case 1:
                     //para cima
                     x--;
-                    if (x < 0 || x > 2 || y > 0 || y < 2) {
+                    if (x < 0 || x > 2 || y < 0 || y > 2) {
                         return 0;
                     }
                     break;
@@ -300,14 +300,14 @@ public class ChungToi {
                     //diagonal direita superior
                     x--;
                     y++;
-                    if (x < 0 || x > 2 || y > 0 || y < 2) {
+                    if (x < 0 || x > 2 || y < 0 || y > 2) {
                         return 0;
                     }
                     break;
                 case 3:
                     //esquerda
                     y--;
-                    if (x < 0 || x > 2 || y > 0 || y < 2) {
+                    if (x < 0 || x > 2 || y < 0 || y > 2) {
                         return 0;
                     }
                     break;
@@ -317,7 +317,7 @@ public class ChungToi {
                 case 5:
                     //direta
                     y++;
-                    if (x < 0 || x > 2 || y > 0 || y < 2) {
+                    if (x < 0 || x > 2 || y < 0 || y > 2) {
                         return 0;
                     }
                     break;
@@ -325,14 +325,14 @@ public class ChungToi {
                     //diagonal esquerda inferior
                     x++;
                     y--;
-                    if (x < 0 || x > 2 || y > 0 || y < 2) {
+                    if (x < 0 || x > 2 || y < 0 || y > 2) {
                         return 0;
                     }
                     break;
                 case 7:
                     //para baixo
                     x++;
-                    if (x < 0 || x > 2 || y > 0 || y < 2) {
+                    if (x < 0 || x > 2 || y < 0 || y > 2) {
                         return 0;
                     }
                     break;
@@ -340,7 +340,7 @@ public class ChungToi {
                     //diagonal direita inferior
                     x++;
                     y++;
-                    if (x < 0 || x > 2 || y > 0 || y < 2) {
+                    if (x < 0 || x > 2 || y < 0 || y > 2) {
                         return 0;
                     }
                     break;

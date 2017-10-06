@@ -90,7 +90,7 @@ public class ChungToiImpl extends UnicastRemoteObject implements ChungToiInterfa
             System.out.println("Usuário " + partidas[getIDJogo(id)].jogo.getId2() + " foi removido da lista de jogadores");
 
             //Remove os jogadores da partidad e limpa o tabuleiroda
-            partidas[getIDJogo(id)].completo = false;
+            partidas[getIDJogo(id)].setCompleto(true);
             partidas[getIDJogo(id)].jogo.setId1(-1);
             partidas[getIDJogo(id)].jogo.setId2(-1);
             partidas[getIDJogo(id)].jogo.setNjogador1(null);
@@ -173,6 +173,11 @@ public class ChungToiImpl extends UnicastRemoteObject implements ChungToiInterfa
                     partidas[getIDJogo(id)].setCompleto(true);
                     return 3;
                 }
+            }
+            //Se a partida já foi concluida por WO ou por ganho ou empate
+            if (partidas[getIDJogo(id)].completo) {
+                System.out.println("A partida " + getIDJogo(id) + " acabou");
+                return 2;
             }
             //Empatou
             if (partidas[getIDJogo(id)].jogo.isFimJogo()) {

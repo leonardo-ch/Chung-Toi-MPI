@@ -1,13 +1,21 @@
 all:			ChungToiClient.class ChungToiServer.class \
 			ChungToiImpl.class ChungToiInterface.class \
-			ChungToi.class Usuario.class
+			ChungToi.class Usuario.class \
+			Dados.class Vertex.class \
+			
 
 ChungToi.class:		ChungToi.java
 			@javac ChungToi.java
 			
 Usuario.class:		Usuario.java
 			@javac Usuario.java
+			
+Dados.class:		Dados.java
+			@javac Dados.java
 
+Vertex.class:		Vertex.java
+			@javac Vertex.java
+			
 ChungToiImpl.class:		ChungToiImpl.java ChungToiInterface.class
 			@javac ChungToiImpl.java
 

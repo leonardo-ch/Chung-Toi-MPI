@@ -85,7 +85,6 @@ public class ChungToiClient {
                     System.out.println("Entrada inválida");
                     in = new Scanner(System.in);
                 }
-                deslocamento = true;
             }
             
             deslocamento:
